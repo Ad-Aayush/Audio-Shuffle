@@ -53,7 +53,7 @@ pygame.display.set_caption("Music")
 Previous = Button('Previous', 125, 50, (220, 440))
 Pause = Button('Pause', 125, 50, (355, 440))
 Next = Button('Next', 125, 50, (490, 440))
-
+Play = Button('Play', 125, 50, (355, 440))
 run = True
 state = 'Play'
 i = 0
@@ -92,16 +92,16 @@ while run:
 
         # Start playing the song
         mixer.music.play()
-
-    if Pause.draw():
-        if state == 'Pause':
-            state = 'Play'
-        else:
+    if state == "Play":
+        if Pause.draw():
             state = 'Pause'
-        if state == 'Pause':
             mixer.music.pause()
-        else:
+    else:
+        if Play.draw():
+            state = 'Play'
             mixer.music.unpause()
+
+
     pygame.display.update()
 
 pygame.quit()
