@@ -1,7 +1,10 @@
-import numpy as np
+import ran
 import os
 import pygame
 from pygame import mixer
+import numpy as np
+from time import sleep
+
 pygame.init()
 
 
@@ -35,10 +38,9 @@ class Button:
             return False
 
 
-
 os.chdir("Audio")
-list = []
-list.extend(np.random.permutation(20))
+list = np.array([], dtype=int)
+list = ran.update(list)
 font = pygame.font.SysFont("Arial", 30)
 
 new = True
@@ -48,10 +50,9 @@ height = 500
 width = 800
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Music")
-Previous = Button('Previous', 125, 50, (220, 440) )
+Previous = Button('Previous', 125, 50, (220, 440))
 Pause = Button('Pause', 125, 50, (355, 440))
 Next = Button('Next', 125, 50, (490, 440))
-
 
 run = True
 state = 'Play'
@@ -66,18 +67,23 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-    
-    if Next.draw():
+    s = "Currently Playing: " + str(list[i]) + ".mp3"
+    Text = Button(s, 395, 60, (220, 220))
+    Text.draw()
+    if Next.draw() or (state == "Play" and not pygame.mixer.music.get_busy()):
+        if not pygame.mixer.music.get_busy():
+            sleep(1)
         i = i + 1
 
         if i >= len(list):
-            list.extend(np.random.permutation(20))
+            list = ran.update(list)
 
         # Loading the song
         mixer.music.load(str(list[i]) + ".mp3")
         # Start playing the song
+
         mixer.music.play()
-        
+
     if Previous.draw():
         if i != 0:
             i = i - 1
@@ -96,8 +102,6 @@ while run:
             mixer.music.pause()
         else:
             mixer.music.unpause()
-    # print(list)
-    # print(i)
     pygame.display.update()
 
 pygame.quit()
