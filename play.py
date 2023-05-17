@@ -43,7 +43,7 @@ list = np.array([], dtype=int)
 list = ran.update(list)
 font = pygame.font.SysFont("Arial", 30)
 
-new = True
+# new = True
 mixer.init()
 
 height = 500
@@ -71,9 +71,10 @@ while run:
     Text = Button(s, 395, 60, (220, 220))
     Text.draw()
     if Next.draw() or (state == "Play" and not pygame.mixer.music.get_busy()):
-        if not pygame.mixer.music.get_busy():
+        if not pygame.mixer.music.get_busy() and state == "Play":
             sleep(1)
         i = i + 1
+        state = "Play"
 
         if i >= len(list):
             list = ran.update(list)
